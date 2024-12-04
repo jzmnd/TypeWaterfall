@@ -1,13 +1,15 @@
+const fontFamily: string = "REM";
+
 const fonts: FontName[] = [
-    { family: "REM", style: "Thin" },
-    { family: "REM", style: "ExtraLight" },
-    { family: "REM", style: "Light" },
-    { family: "REM", style: "Regular" },
-    { family: "REM", style: "Medium" },
-    { family: "REM", style: "SemiBold" },
-    { family: "REM", style: "Bold" },
-    { family: "REM", style: "ExtraBold" },
-    { family: "REM", style: "Black" }
+    { family: fontFamily, style: "Thin" },
+    { family: fontFamily, style: "ExtraLight" },
+    { family: fontFamily, style: "Light" },
+    { family: fontFamily, style: "Regular" },
+    { family: fontFamily, style: "Medium" },
+    { family: fontFamily, style: "SemiBold" },
+    { family: fontFamily, style: "Bold" },
+    { family: fontFamily, style: "ExtraBold" },
+    { family: fontFamily, style: "Black" }
 ];
 
 const cases: TextCase[] = [
