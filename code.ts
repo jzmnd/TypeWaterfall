@@ -10,12 +10,16 @@ const fonts: FontName[] = [
     { family: "REM", style: "Black" }
 ];
 
+const cases: TextCase[] = [
+    "ORIGINAL",
+    "SMALL_CAPS"
+];
+
 const frameName: string = "Styled Text";
 const frameWidth: number = 400;
-const frameHeight: number = 400;
 const textContent: string = "Hello, World!";
-const yOffset: number = 40;
-const fontSize: number = 24;
+const yOffset: number = 20;
+const fontSize: number = 16;
 
 async function loadFonts(): Promise<void> {
     for (const font of fonts) {
@@ -29,24 +33,31 @@ async function createStyledText(): Promise<void> {
 
     // Create a new frame to hold the styled text nodes
     const frame = figma.createFrame();
+    // Calculate frame height from yOffset
+    let frameHeight = yOffset * (fonts.length + 1) * cases.length;
     frame.resize(frameWidth, frameHeight);
     frame.name = frameName;
 
     let yOffsetCur = 0;
 
-    for (const font of fonts) {
-        // Create a text node
-        const textNode = figma.createText();
-        // Set the font before using the text node to ensure default font is not used
-        textNode.fontName = font;
-        textNode.characters = textContent;
-        textNode.fontSize = fontSize;
-        textNode.y = yOffsetCur;
+    for (const case_ of cases) {
+        for (const font of fonts) {
+            // Create a text node
+            const textNode = figma.createText();
+            // Set the font before using the text node to ensure default font is not used
+            textNode.fontName = font;
+            textNode.characters = textContent;
+            textNode.fontSize = fontSize;
+            textNode.textCase = case_;
+            textNode.y = yOffsetCur;
 
-        // Append the text node to the frame
-        frame.appendChild(textNode);
+            // Append the text node to the frame
+            frame.appendChild(textNode);
 
-        // Update the yOffsetCur for the next line of text
+            // Update the yOffsetCur for the next line of text
+            yOffsetCur += yOffset;
+        }
+        // Update the yOffsetCur for the next block of text
         yOffsetCur += yOffset;
     }
 
