@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+  <style>
+    /* General styles for the Figma plugin UI */
+    body {
+      font-family: var(--figma-font-family, sans-serif);
+      font-size: var(--figma-font-size, 12px);
+      color: var(--figma-color-text, #000);
+      background-color: var(--figma-color-background, #fff);
+      margin: 0;
+      padding: 16px;
+    }
+
+    h2 {
+      font-size: var(--figma-font-size-medium, 16px);
+      margin-bottom: 16px;
+      color: var(--figma-color-text, #000);
+    }
+
+    p {
+      font-family: var(--figma-font-family, sans-serif);
+      font-size: var(--figma-font-size, 12px);
+      color: var(--figma-color-text, #000);
+      line-height: 1.5;
+      margin: 0 0 8px; /* Space between paragraphs */
+    }
+
+    input {
+      font-family: var(--figma-font-family, sans-serif);
+      font-size: var(--figma-font-size, 12px);
+      color: var(--figma-color-text, #000);
+      background-color: var(--figma-color-background, #fff);
+      border: 1px solid var(--figma-color-border, #d1d1d1);
+      border-radius: var(--figma-border-radius-small, 4px);
+      padding: 4px;
+      width: 100%; /* Adjust as needed */
+      box-sizing: border-box; /* Ensures padding is included in width */
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--figma-color-focus, #18A0FB); /* Figma brand blue */
+      box-shadow: 0 0 0 2px var(--figma-color-focus-ring, rgba(24, 160, 251, 0.25));
+    }
+
+    input:disabled {
+      background-color: var(--figma-color-disabled, #f5f5f5);
+      color: var(--figma-color-disabled-text, #999);
+      border-color: var(--figma-color-border-disabled, #e1e1e1);
+      cursor: not-allowed;
+    }
+
+    select {
+      font-family: var(--figma-font-family, sans-serif);
+      font-size: var(--figma-font-size, 12px);
+      color: var(--figma-color-text, #000);
+      background-color: var(--figma-color-background, #fff);
+      border: 1px solid var(--figma-color-border, #d1d1d1);
+      border-radius: var(--figma-border-radius-small, 4px);
+      padding: 4px;
+      width: 100%; /* Adjust as needed */
+      box-sizing: border-box; /* Includes padding in width */
+      appearance: none; /* Removes browser's default dropdown styling */
+      cursor: pointer;
+    }
+
+    select:focus {
+      outline: none;
+      border-color: var(--figma-color-focus, #18A0FB); /* Figma blue for focus */
+      box-shadow: 0 0 0 2px var(--figma-color-focus-ring, rgba(24, 160, 251, 0.25));
+    }
+
+    select:disabled {
+      background-color: var(--figma-color-disabled, #f5f5f5);
+      color: var(--figma-color-disabled-text, #999);
+      border-color: var(--figma-color-border-disabled, #e1e1e1);
+      cursor: not-allowed;
+    }
+
+    option {
+      font-family: var(--figma-font-family, sans-serif);
+      font-size: var(--figma-font-size, 12px);
+      color: var(--figma-color-text, #000);
+    }
+
+    button {
+      font-family: inherit;
+      font-size: var(--figma-font-size, 12px);
+      color: var(--figma-color-text-on-brand, #fff);
+      background-color: var(--figma-color-brand, #18A0FB);
+      border: none;
+      padding: 8px 16px;
+      border-radius: var(--figma-border-radius-medium, 4px);
+      cursor: pointer;
+      margin-right: 8px;
+    }
+
+    button:hover {
+      background-color: var(--figma-color-hover, #007ACC);
+    }
+
+    button:active {
+      background-color: var(--figma-color-pressed, #005F99);
+    }
+  </style>
+
+  <body>
+    <h2>Type Waterfall Creator</h2>
+    <p><input id="frame-name" type="string", placeholder="Frame name"></p>
+    <p><input id="text-content" type="string", placeholder="Text to display"></p>
+    <p><input id="font-size" type="number", placeholder="Font size"></p>
+    <p><input id="y-offset" type="number", placeholder="Y offset"></p>
+    <p>
+      <select id="font-selector">
+        <option value="" disabled selected>Select a font</option>
+      </select>
+    </p>
+    <p>
+      <select id="text-styles" multiple>
+        <option value="" disabled selected>Select styles</option>
+      </select>
+    </p>
+    <p>
+      <select id="text-cases" multiple>
+        <option value="" disabled selected>Select cases</option>
+        <option value="ORIGINAL">Original</option>
+        <option value="TITLE">Title case</option>
+        <option value="SMALL_CAPS">Small caps</option>
+      </select>
+    </p>
+    <button id="create">Create</button>
+    <button id="cancel">Cancel</button>
+
+    <script>
+      onmessage = (event) => {
+        const { type, data } = event.data.pluginMessage;
+        if (type === "font-families") {
+          const fontSelector = document.getElementById("font-selector");
+          data.forEach(font => {
+            const option = document.createElement("option");
+            option.value = font;
+            option.textContent = font;
+            fontSelector.appendChild(option);
+          });
+        }
+      }
+
+      document.getElementById("create").onclick = () => {
+        const frameName = document.getElementById("frame-name");
+        const textContent = document.getElementById("text-content");
+        const yOffset = document.getElementById("y-offset");
+        const fontSize = document.getElementById("font-size");
+        const fontFamily = document.getElementById("font-selector");
+        const textCases = document.getElementById("text-cases");
+
+        parent.postMessage(
+          {
+            pluginMessage: {
+              type: "create-waterfall",
+              frameName: frameName.value,
+              textContent: textContent.value,
+              yOffset: parseInt(yOffset.value),
+              fontSize: parseInt(fontSize.value),
+              fontFamily: fontFamily.value,
+              textCases: Array.from(textCases.selectedOptions).map(option => option.value)
+            }
+          },
+          "*"
+        )
+      }
+
+      document.getElementById("cancel").onclick = () => {
+        parent.postMessage({ pluginMessage: { type: "cancel" } }, "*")
+      }
+
+    </script>
+
+  </body>
+
+</html>

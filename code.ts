@@ -1,44 +1,52 @@
-const fontFamily: string = "REM";
+type PluginMessage = {
+    type: string,
+    frameName: string,
+    textContent: string,
+    yOffset: number,
+    fontSize: number,
+    fontFamily: string,
+    textCases: TextCase[]
+};
 
-const fonts: FontName[] = [
-    { family: fontFamily, style: "Thin" },
-    { family: fontFamily, style: "ExtraLight" },
-    { family: fontFamily, style: "Light" },
-    { family: fontFamily, style: "Regular" },
-    { family: fontFamily, style: "Medium" },
-    { family: fontFamily, style: "SemiBold" },
-    { family: fontFamily, style: "Bold" },
-    { family: fontFamily, style: "ExtraBold" },
-    { family: fontFamily, style: "Black" }
-];
+const defaultFrameWidth = 400;
 
-const cases: TextCase[] = [
-    "ORIGINAL",
-    "SMALL_CAPS"
-];
+// This shows the HTML page in "ui.html"
+figma.showUI(__html__, { height: 420, width: 350, themeColors: true });
 
-const frameName: string = "Styled Text";
-const frameWidth: number = 400;
-const textContent: string = "Hello, World!";
-const yOffset: number = 20;
-const fontSize: number = 16;
+(async () => {
+    const availableFonts = await figma.listAvailableFontsAsync();
 
-async function loadFonts(): Promise<void> {
+    // Extract unique font families and send to the UI
+    const fontFamilies = [...new Set(availableFonts.map(font => font.fontName.family))];
+    figma.ui.postMessage({ type: "font-families", data: fontFamilies });
+})();
+
+async function loadFonts(fonts: FontName[]): Promise<void> {
     for (const font of fonts) {
-        console.log("Loading font:", font.family, font.style);
         await figma.loadFontAsync(font);
     }
 }
 
-async function createStyledText(): Promise<void> {
-    await loadFonts();
+async function createFontList(fontFamily: string): Promise<FontName[]> {
+    const availableFonts = await figma.listAvailableFontsAsync();
+    const fonts: FontName[] = [];
+    availableFonts.filter(font => font.fontName.family === fontFamily).map(font => font.fontName.style).forEach(s => {
+        fonts.push({ family: fontFamily, style: s })
+    });
+    return fonts;
+}
+
+async function createStyledText(msg: PluginMessage): Promise<void> {
+    const fonts = await createFontList(msg.fontFamily);
+    await loadFonts(fonts);
+    const cases = msg.textCases;
 
     // Create a new frame to hold the styled text nodes
     const frame = figma.createFrame();
     // Calculate frame height from yOffset
-    let frameHeight = yOffset * (fonts.length + 1) * cases.length;
-    frame.resize(frameWidth, frameHeight);
-    frame.name = frameName;
+    const frameHeight = msg.yOffset * (fonts.length + 1) * cases.length;
+    frame.resize(defaultFrameWidth, frameHeight);
+    frame.name = msg.frameName;
 
     let yOffsetCur = 0;
 
@@ -48,8 +56,8 @@ async function createStyledText(): Promise<void> {
             const textNode = figma.createText();
             // Set the font before using the text node to ensure default font is not used
             textNode.fontName = font;
-            textNode.characters = textContent;
-            textNode.fontSize = fontSize;
+            textNode.characters = msg.textContent;
+            textNode.fontSize = msg.fontSize;
             textNode.textCase = case_;
             textNode.y = yOffsetCur;
 
@@ -57,10 +65,10 @@ async function createStyledText(): Promise<void> {
             frame.appendChild(textNode);
 
             // Update the yOffsetCur for the next line of text
-            yOffsetCur += yOffset;
+            yOffsetCur += msg.yOffset;
         }
         // Update the yOffsetCur for the next block of text
-        yOffsetCur += yOffset;
+        yOffsetCur += msg.yOffset;
     }
 
     // Add the frame to the current page
@@ -68,4 +76,9 @@ async function createStyledText(): Promise<void> {
 }
 
 // Run the function and close the plugin
-createStyledText().then(() => figma.closePlugin());
+figma.ui.onmessage = async (msg: PluginMessage) => {
+    if (msg.type === "create-waterfall") {
+        await createStyledText(msg);
+    }
+    figma.closePlugin();
+}

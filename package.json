@@ -1,7 +1,7 @@
 {
   "name": "TypeWaterfall",
   "version": "1.0.0",
-  "description": "Your Figma Plugin",
+  "description": "Plugin to create type specimen waterfalls",
   "main": "code.js",
   "scripts": {
     "build": "tsc -p tsconfig.json",
