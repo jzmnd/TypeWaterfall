@@ -1,11 +1,11 @@
 type PluginMessage = {
-    type: string,
-    frameName: string,
-    textContent: string,
-    yOffset: number,
-    fontSize: number,
-    fontFamily: string,
-    textCases: TextCase[]
+    type: string;
+    frameName: string;
+    textContent: string;
+    yOffset: number;
+    fontSize: number;
+    fontFamily: string;
+    textCases: TextCase[];
 };
 
 const defaultFrameWidth = 400;
@@ -17,8 +17,10 @@ figma.showUI(__html__, { height: 420, width: 350, themeColors: true });
     const availableFonts = await figma.listAvailableFontsAsync();
 
     // Extract unique font families and send to the UI
-    const fontFamilies = [...new Set(availableFonts.map(font => font.fontName.family))];
-    figma.ui.postMessage({ type: "font-families", data: fontFamilies });
+    const fontFamilies = [
+        ...new Set(availableFonts.map((font) => font.fontName.family)),
+    ];
+    figma.ui.postMessage({ type: 'font-families', data: fontFamilies });
 })();
 
 async function loadFonts(fonts: FontName[]): Promise<void> {
@@ -30,9 +32,12 @@ async function loadFonts(fonts: FontName[]): Promise<void> {
 async function createFontList(fontFamily: string): Promise<FontName[]> {
     const availableFonts = await figma.listAvailableFontsAsync();
     const fonts: FontName[] = [];
-    availableFonts.filter(font => font.fontName.family === fontFamily).map(font => font.fontName.style).forEach(s => {
-        fonts.push({ family: fontFamily, style: s })
-    });
+    availableFonts
+        .filter((font) => font.fontName.family === fontFamily)
+        .map((font) => font.fontName.style)
+        .forEach((s) => {
+            fonts.push({ family: fontFamily, style: s });
+        });
     return fonts;
 }
 
@@ -77,8 +82,8 @@ async function createStyledText(msg: PluginMessage): Promise<void> {
 
 // Run the function and close the plugin
 figma.ui.onmessage = async (msg: PluginMessage) => {
-    if (msg.type === "create-waterfall") {
+    if (msg.type === 'create-waterfall') {
         await createStyledText(msg);
     }
     figma.closePlugin();
-}
+};
