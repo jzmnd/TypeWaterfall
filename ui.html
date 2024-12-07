@@ -6,7 +6,7 @@
       font-family: var(--figma-font-family, sans-serif);
       font-size: var(--figma-font-size, 12px);
       color: var(--figma-color-text, #000);
-      background-color: var(--figma-color-background, #fff);
+      background-color: var(--figma-color-bg, #fff);
       margin: 0;
       padding: 16px;
     }
@@ -18,28 +18,40 @@
     }
 
     p {
+      display: flex;
+      align-items: center;
       font-family: var(--figma-font-family, sans-serif);
       font-size: var(--figma-font-size, 12px);
       color: var(--figma-color-text, #000);
       line-height: 1.5;
-      margin: 0 0 8px; /* Space between paragraphs */
+      margin: 0 0 8px;
+    }
+
+    p input[type="checkbox"] {
+      width: 14px;
+      height: 14px;
+      cursor: pointer;
+    }
+
+    p label {
+      cursor: pointer;
     }
 
     input {
       font-family: var(--figma-font-family, sans-serif);
       font-size: var(--figma-font-size, 12px);
       color: var(--figma-color-text, #000);
-      background-color: var(--figma-color-background, #fff);
+      background-color: var(--figma-color-bg, #fff);
       border: 1px solid var(--figma-color-border, #d1d1d1);
       border-radius: var(--figma-border-radius-small, 4px);
       padding: 4px;
-      width: 100%; /* Adjust as needed */
+      width: 100%;
       box-sizing: border-box; /* Ensures padding is included in width */
     }
 
     input:focus {
       outline: none;
-      border-color: var(--figma-color-focus, #18A0FB); /* Figma brand blue */
+      border-color: var(--figma-color-focus, #18A0FB);
       box-shadow: 0 0 0 2px var(--figma-color-focus-ring, rgba(24, 160, 251, 0.25));
     }
 
@@ -54,11 +66,11 @@
       font-family: var(--figma-font-family, sans-serif);
       font-size: var(--figma-font-size, 12px);
       color: var(--figma-color-text, #000);
-      background-color: var(--figma-color-background, #fff);
+      background-color: var(--figma-color-bg, #fff);
       border: 1px solid var(--figma-color-border, #d1d1d1);
       border-radius: var(--figma-border-radius-small, 4px);
       padding: 4px;
-      width: 100%; /* Adjust as needed */
+      width: 100%;
       box-sizing: border-box; /* Includes padding in width */
       appearance: none; /* Removes browser's default dropdown styling */
       cursor: pointer;
@@ -129,6 +141,10 @@
         <option value="SMALL_CAPS">Small caps</option>
       </select>
     </p>
+    <p>
+      <input id="descending" type="checkbox">
+      <label for="descending">Descending waterfall</label>
+    </p>
     <button id="create">Create</button>
     <button id="cancel">Cancel</button>
 
@@ -153,6 +169,7 @@
         const fontFamily = document.getElementById("font-selector");
         const textStyles = document.getElementById("text-styles");
         const textCases = document.getElementById("text-cases");
+        const isDescending = document.getElementById("descending");
 
         parent.postMessage(
           {
@@ -163,7 +180,8 @@
               fontSize: parseInt(fontSize.value),
               fontFamily: fontFamily.value,
               textStyles: Array.from(textStyles.selectedOptions).map(option => option.value),
-              textCases: Array.from(textCases.selectedOptions).map(option => option.value)
+              textCases: Array.from(textCases.selectedOptions).map(option => option.value),
+              IsDescending: isDescending.checked
             }
           },
           "*"

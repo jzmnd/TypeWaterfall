@@ -33,13 +33,14 @@ type PluginMessage = {
     fontFamily: string;
     textStyles: string[];
     textCases: TextCase[];
+    IsDescending: boolean;
 };
 
 // Default padding amount
 const defaultPad = 5;
 
 // This shows the HTML page in "ui.html"
-figma.showUI(__html__, { height: 400, width: 350, themeColors: true });
+figma.showUI(__html__, { height: 410, width: 350, themeColors: true });
 
 // Extract unique font families and send to the UI to populate the font selector
 (async () => {
@@ -73,12 +74,14 @@ async function createFontList(msg: PluginMessage): Promise<FontName[]> {
         (font) => font.fontName.family === msg.fontFamily,
     );
 
+    const m = msg.IsDescending ? -1 : 1;
+
     const sortedFonts = filteredFonts.sort((a, b) => {
         // Sort by italic/non-italic first
         const aIsItalic = a.fontName.style.toLowerCase().includes('italic');
         const bIsItalic = b.fontName.style.toLowerCase().includes('italic');
         if (aIsItalic !== bIsItalic) {
-            return (aIsItalic ? 1 : 0) - (bIsItalic ? 1 : 0);
+            return m * ((aIsItalic ? 1 : 0) - (bIsItalic ? 1 : 0));
         }
         // Sort by weight order
         const aWeightIdx = fontWeightOrder.indexOf(
@@ -87,7 +90,7 @@ async function createFontList(msg: PluginMessage): Promise<FontName[]> {
         const bWeightIdx = fontWeightOrder.indexOf(
             b.fontName.style.replace(/italic/i, '').trim(),
         );
-        return aWeightIdx - bWeightIdx;
+        return m * (aWeightIdx - bWeightIdx);
     });
 
     return sortedFonts.map((font) => font.fontName);
