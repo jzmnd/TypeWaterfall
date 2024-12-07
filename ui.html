@@ -3,8 +3,8 @@
   <style>
     /* General styles for the Figma plugin UI */
     body {
-      font-family: var(--figma-font-family, sans-serif);
-      font-size: var(--figma-font-size, 12px);
+      font-family: "Inter", sans-serif;
+      font-size: 11px;
       color: var(--figma-color-text, #000);
       background-color: var(--figma-color-bg, #fff);
       margin: 0;
@@ -12,7 +12,7 @@
     }
 
     h2 {
-      font-size: var(--figma-font-size-medium, 16px);
+      font-size: 14px;
       margin-bottom: 16px;
       color: var(--figma-color-text, #000);
     }
@@ -20,8 +20,8 @@
     p {
       display: flex;
       align-items: center;
-      font-family: var(--figma-font-family, sans-serif);
-      font-size: var(--figma-font-size, 12px);
+      font-family: inherit;
+      font-size: 11px;
       color: var(--figma-color-text, #000);
       line-height: 1.5;
       margin: 0 0 8px;
@@ -38,15 +38,15 @@
     }
 
     input {
-      font-family: var(--figma-font-family, sans-serif);
-      font-size: var(--figma-font-size, 12px);
+      font-family: inherit;
+      font-size: 11px;
       color: var(--figma-color-text, #000);
-      background-color: var(--figma-color-bg, #fff);
+      background-color: var(--figma-color-bg-secondary, #fff);
       border: 1px solid var(--figma-color-border, #d1d1d1);
-      border-radius: var(--figma-border-radius-small, 4px);
+      border-radius: 4px;
       padding: 4px;
       width: 100%;
-      box-sizing: border-box; /* Ensures padding is included in width */
+      box-sizing: border-box;
     }
 
     input:focus {
@@ -57,52 +57,52 @@
 
     input:disabled {
       background-color: var(--figma-color-disabled, #f5f5f5);
-      color: var(--figma-color-disabled-text, #999);
+      color: var(--figma-color-text-disabled, #999);
       border-color: var(--figma-color-border-disabled, #e1e1e1);
       cursor: not-allowed;
     }
 
     select {
-      font-family: var(--figma-font-family, sans-serif);
-      font-size: var(--figma-font-size, 12px);
+      font-family: inherit;
+      font-size: 11px;
       color: var(--figma-color-text, #000);
-      background-color: var(--figma-color-bg, #fff);
+      background-color: var(--figma-color-bg-secondary, #fff);
       border: 1px solid var(--figma-color-border, #d1d1d1);
-      border-radius: var(--figma-border-radius-small, 4px);
+      border-radius: 4px;
       padding: 4px;
       width: 100%;
-      box-sizing: border-box; /* Includes padding in width */
+      box-sizing: border-box;
       appearance: none; /* Removes browser's default dropdown styling */
       cursor: pointer;
     }
 
     select:focus {
       outline: none;
-      border-color: var(--figma-color-focus, #18A0FB); /* Figma blue for focus */
+      border-color: var(--figma-color-focus, #18A0FB);
       box-shadow: 0 0 0 2px var(--figma-color-focus-ring, rgba(24, 160, 251, 0.25));
     }
 
     select:disabled {
       background-color: var(--figma-color-disabled, #f5f5f5);
-      color: var(--figma-color-disabled-text, #999);
+      color: var(--figma-color-text-disabled, #999);
       border-color: var(--figma-color-border-disabled, #e1e1e1);
       cursor: not-allowed;
     }
 
     option {
-      font-family: var(--figma-font-family, sans-serif);
-      font-size: var(--figma-font-size, 12px);
+      font-family: inherit;
+      font-size: 11px;
       color: var(--figma-color-text, #000);
     }
 
     button {
       font-family: inherit;
-      font-size: var(--figma-font-size, 12px);
-      color: var(--figma-color-text-on-brand, #fff);
+      font-size: 11px;
+      color: var(--figma-color-text-onbrand, #fff);
       background-color: var(--figma-color-brand, #18A0FB);
       border: none;
       padding: 8px 16px;
-      border-radius: var(--figma-border-radius-medium, 4px);
+      border-radius: 4px;
       cursor: pointer;
       margin-right: 8px;
     }

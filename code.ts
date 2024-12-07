@@ -40,7 +40,7 @@ type PluginMessage = {
 const defaultPad = 5;
 
 // This shows the HTML page in "ui.html"
-figma.showUI(__html__, { height: 410, width: 350, themeColors: true });
+figma.showUI(__html__, { height: 400, width: 350, themeColors: true });
 
 // Extract unique font families and send to the UI to populate the font selector
 (async () => {
