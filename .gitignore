@@ -7,4 +7,5 @@ out/
 dist/
 code.js
 
+# MacOS
 .DS_Store

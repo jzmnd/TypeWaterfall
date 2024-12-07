@@ -24,6 +24,7 @@ const fontWeightOrder = [
     'Heavy',
 ];
 
+// Event message from the plugin UI
 type PluginMessage = {
     type: string;
     frameName: string;
@@ -34,27 +35,37 @@ type PluginMessage = {
     textCases: TextCase[];
 };
 
+// Default padding amount
 const defaultPad = 5;
 
 // This shows the HTML page in "ui.html"
 figma.showUI(__html__, { height: 400, width: 350, themeColors: true });
 
+// Extract unique font families and send to the UI to populate the font selector
 (async () => {
     const availableFonts = await figma.listAvailableFontsAsync();
-
-    // Extract unique font families and send to the UI
     const fontFamilies = [
         ...new Set(availableFonts.map((font) => font.fontName.family)),
     ];
     figma.ui.postMessage({ type: 'font-families', data: fontFamilies });
 })();
 
+/**
+ * Loads the given list of font names into Figma
+ * @param List of font names
+ * @returns Resolves when fonts are loaded
+ */
 async function loadFonts(fonts: FontName[]): Promise<void> {
     for (const font of fonts) {
         await figma.loadFontAsync(font);
     }
 }
 
+/**
+ * Creates a list of fonts required for the waterfall, ordered by font weight
+ * @param Plugin message
+ * @returns Returns font names once the fonts are fetched and ordered
+ */
 async function createFontList(msg: PluginMessage): Promise<FontName[]> {
     const availableFonts = await figma.listAvailableFontsAsync();
 
@@ -62,7 +73,6 @@ async function createFontList(msg: PluginMessage): Promise<FontName[]> {
         (font) => font.fontName.family === msg.fontFamily,
     );
 
-    // Custom sorting function
     const sortedFonts = filteredFonts.sort((a, b) => {
         // Sort by italic/non-italic first
         const aIsItalic = a.fontName.style.toLowerCase().includes('italic');
@@ -83,10 +93,14 @@ async function createFontList(msg: PluginMessage): Promise<FontName[]> {
     return sortedFonts.map((font) => font.fontName);
 }
 
+/**
+ * Creates the Figma frame containing the text waterfall
+ * @param Plugin message
+ * @returns Returns when text is created
+ */
 async function createStyledText(msg: PluginMessage): Promise<void> {
     const fonts = await createFontList(msg);
     await loadFonts(fonts);
-    const cases = msg.textCases;
 
     // Create a new frame to hold the styled text nodes
     const frame = figma.createFrame();
@@ -103,9 +117,8 @@ async function createStyledText(msg: PluginMessage): Promise<void> {
 
     let yOffset = 0;
 
-    for (const case_ of cases) {
+    for (const case_ of msg.textCases) {
         for (const font of fonts) {
-            // Create a text node
             const textNode = figma.createText();
             // Set the font before using the text node to ensure default font is not used
             textNode.fontName = font;
@@ -114,15 +127,12 @@ async function createStyledText(msg: PluginMessage): Promise<void> {
             textNode.textCase = case_;
             textNode.y = yOffset;
 
-            // Append the text node to the frame
             frame.appendChild(textNode);
 
-            // Update the yOffset for the next line of text
             yOffset += msg.fontSize + defaultPad;
         }
     }
 
-    // Add the frame to the current page
     figma.currentPage.appendChild(frame);
 }
 
