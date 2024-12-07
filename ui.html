@@ -118,6 +118,8 @@
     <p>
       <select id="text-styles" multiple>
         <option value="" disabled selected>Select styles</option>
+        <option value="non-italic">Non-Italic</option>
+        <option value="italic">Italic</option>
       </select>
     </p>
     <p>
@@ -148,9 +150,10 @@
       document.getElementById("create").onclick = () => {
         const frameName = document.getElementById("frame-name");
         const textContent = document.getElementById("text-content");
-        const yOffset = document.getElementById("y-offset");
         const fontSize = document.getElementById("font-size");
+        const yOffset = document.getElementById("y-offset");
         const fontFamily = document.getElementById("font-selector");
+        const textStyles = document.getElementById("text-styles");
         const textCases = document.getElementById("text-cases");
 
         parent.postMessage(
@@ -159,9 +162,10 @@
               type: "create-waterfall",
               frameName: frameName.value,
               textContent: textContent.value,
-              yOffset: parseInt(yOffset.value),
               fontSize: parseInt(fontSize.value),
+              yOffset: parseInt(yOffset.value),
               fontFamily: fontFamily.value,
+              textStyles: Array.from(textStyles.selectedOptions).map(option => option.value)
               textCases: Array.from(textCases.selectedOptions).map(option => option.value)
             }
           },

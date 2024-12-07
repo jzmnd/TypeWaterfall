@@ -28,9 +28,10 @@ type PluginMessage = {
     type: string;
     frameName: string;
     textContent: string;
-    yOffset: number;
     fontSize: number;
+    yOffset: number;
     fontFamily: string;
+    textStyles: string[];
     textCases: TextCase[];
 };
 
@@ -55,11 +56,11 @@ async function loadFonts(fonts: FontName[]): Promise<void> {
     }
 }
 
-async function createFontList(fontFamily: string): Promise<FontName[]> {
+async function createFontList(msg: PluginMessage): Promise<FontName[]> {
     const availableFonts = await figma.listAvailableFontsAsync();
 
     const filteredFonts = availableFonts.filter(
-        (font) => font.fontName.family === fontFamily,
+        (font) => font.fontName.family === msg.fontFamily,
     );
 
     // Custom sorting function
@@ -84,7 +85,7 @@ async function createFontList(fontFamily: string): Promise<FontName[]> {
 }
 
 async function createStyledText(msg: PluginMessage): Promise<void> {
-    const fonts = await createFontList(msg.fontFamily);
+    const fonts = await createFontList(msg);
     await loadFonts(fonts);
     const cases = msg.textCases;
 
