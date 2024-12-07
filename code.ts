@@ -34,7 +34,6 @@ type PluginMessage = {
     textCases: TextCase[];
 };
 
-const defaultFrameWidth = 400;
 const defaultPad = 5;
 
 // This shows the HTML page in "ui.html"
@@ -91,13 +90,18 @@ async function createStyledText(msg: PluginMessage): Promise<void> {
 
     // Create a new frame to hold the styled text nodes
     const frame = figma.createFrame();
-    // Calculate frame height from yOffset
-    const yOffset = msg.fontSize + defaultPad;
-    const frameHeight = yOffset * fonts.length * cases.length;
-    frame.resize(defaultFrameWidth, frameHeight);
-    frame.name = msg.frameName;
 
-    let yOffsetCur = 0;
+    frame.name = msg.frameName;
+    frame.layoutMode = 'VERTICAL';
+    frame.itemSpacing = defaultPad;
+    frame.primaryAxisSizingMode = 'AUTO';
+    frame.counterAxisSizingMode = 'AUTO';
+    frame.paddingLeft = defaultPad;
+    frame.paddingRight = defaultPad;
+    frame.paddingTop = defaultPad;
+    frame.paddingBottom = defaultPad;
+
+    let yOffset = 0;
 
     for (const case_ of cases) {
         for (const font of fonts) {
@@ -108,13 +112,13 @@ async function createStyledText(msg: PluginMessage): Promise<void> {
             textNode.characters = msg.textContent;
             textNode.fontSize = msg.fontSize;
             textNode.textCase = case_;
-            textNode.y = yOffsetCur;
+            textNode.y = yOffset;
 
             // Append the text node to the frame
             frame.appendChild(textNode);
 
-            // Update the yOffsetCur for the next line of text
-            yOffsetCur += yOffset;
+            // Update the yOffset for the next line of text
+            yOffset += msg.fontSize + defaultPad;
         }
     }
 
