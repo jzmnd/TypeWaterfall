@@ -1,3 +1,29 @@
+// List of the most common font weight names ordered from lowest to highest weight
+const fontWeightOrder = [
+    'Hairline',
+    'Thin',
+    'Ultra Light',
+    'UltraLight',
+    'Extra Light',
+    'ExtraLight',
+    'Light',
+    'Normal',
+    'Regular',
+    '', // Include blank string to account for Regular Italic which is often just named Italic
+    'Medium',
+    'Semi Bold',
+    'SemiBold',
+    'Demi Bold',
+    'DemiBold',
+    'Bold',
+    'Extra Bold',
+    'ExtraBold',
+    'Ultra Bold',
+    'UltraBold',
+    'Black',
+    'Heavy',
+];
+
 type PluginMessage = {
     type: string;
     frameName: string;
@@ -31,14 +57,30 @@ async function loadFonts(fonts: FontName[]): Promise<void> {
 
 async function createFontList(fontFamily: string): Promise<FontName[]> {
     const availableFonts = await figma.listAvailableFontsAsync();
-    const fonts: FontName[] = [];
-    availableFonts
-        .filter((font) => font.fontName.family === fontFamily)
-        .map((font) => font.fontName.style)
-        .forEach((s) => {
-            fonts.push({ family: fontFamily, style: s });
-        });
-    return fonts;
+
+    const filteredFonts = availableFonts.filter(
+        (font) => font.fontName.family === fontFamily,
+    );
+
+    // Custom sorting function
+    const sortedFonts = filteredFonts.sort((a, b) => {
+        // Sort by italic/non-italic first
+        const aIsItalic = a.fontName.style.toLowerCase().includes('italic');
+        const bIsItalic = b.fontName.style.toLowerCase().includes('italic');
+        if (aIsItalic !== bIsItalic) {
+            return (aIsItalic ? 1 : 0) - (bIsItalic ? 1 : 0);
+        }
+        // Sort by weight order
+        const aWeightIdx = fontWeightOrder.indexOf(
+            a.fontName.style.replace(/italic/i, '').trim(),
+        );
+        const bWeightIdx = fontWeightOrder.indexOf(
+            b.fontName.style.replace(/italic/i, '').trim(),
+        );
+        return aWeightIdx - bWeightIdx;
+    });
+
+    return sortedFonts.map((font) => font.fontName);
 }
 
 async function createStyledText(msg: PluginMessage): Promise<void> {
@@ -49,7 +91,7 @@ async function createStyledText(msg: PluginMessage): Promise<void> {
     // Create a new frame to hold the styled text nodes
     const frame = figma.createFrame();
     // Calculate frame height from yOffset
-    const frameHeight = msg.yOffset * (fonts.length + 1) * cases.length;
+    const frameHeight = msg.yOffset * fonts.length * cases.length;
     frame.resize(defaultFrameWidth, frameHeight);
     frame.name = msg.frameName;
 
@@ -72,8 +114,6 @@ async function createStyledText(msg: PluginMessage): Promise<void> {
             // Update the yOffsetCur for the next line of text
             yOffsetCur += msg.yOffset;
         }
-        // Update the yOffsetCur for the next block of text
-        yOffsetCur += msg.yOffset;
     }
 
     // Add the frame to the current page
