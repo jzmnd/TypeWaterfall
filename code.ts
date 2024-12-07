@@ -70,8 +70,16 @@ async function loadFonts(fonts: FontName[]): Promise<void> {
 async function createFontList(msg: PluginMessage): Promise<FontName[]> {
     const availableFonts = await figma.listAvailableFontsAsync();
 
+    const includeItalic = msg.textStyles.indexOf('italic') !== -1;
+    const includeNonItalic = msg.textStyles.indexOf('non-italic') !== -1;
+
     const filteredFonts = availableFonts.filter(
-        (font) => font.fontName.family === msg.fontFamily,
+        (font) =>
+            font.fontName.family === msg.fontFamily &&
+            ((font.fontName.style.toLowerCase().includes('italic') &&
+                includeItalic) ||
+                (!font.fontName.style.toLowerCase().includes('italic') &&
+                    includeNonItalic)),
     );
 
     const m = msg.IsDescending ? -1 : 1;
