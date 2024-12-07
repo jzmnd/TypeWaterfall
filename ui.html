@@ -109,7 +109,6 @@
     <p><input id="frame-name" type="string", placeholder="Frame name"></p>
     <p><input id="text-content" type="string", placeholder="Text to display"></p>
     <p><input id="font-size" type="number", placeholder="Font size"></p>
-    <p><input id="y-offset" type="number", placeholder="Y offset"></p>
     <p>
       <select id="font-selector">
         <option value="" disabled selected>Select a font</option>
@@ -151,7 +150,6 @@
         const frameName = document.getElementById("frame-name");
         const textContent = document.getElementById("text-content");
         const fontSize = document.getElementById("font-size");
-        const yOffset = document.getElementById("y-offset");
         const fontFamily = document.getElementById("font-selector");
         const textStyles = document.getElementById("text-styles");
         const textCases = document.getElementById("text-cases");
@@ -163,7 +161,6 @@
               frameName: frameName.value,
               textContent: textContent.value,
               fontSize: parseInt(fontSize.value),
-              yOffset: parseInt(yOffset.value),
               fontFamily: fontFamily.value,
               textStyles: Array.from(textStyles.selectedOptions).map(option => option.value),
               textCases: Array.from(textCases.selectedOptions).map(option => option.value)

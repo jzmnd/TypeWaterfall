@@ -29,16 +29,16 @@ type PluginMessage = {
     frameName: string;
     textContent: string;
     fontSize: number;
-    yOffset: number;
     fontFamily: string;
     textStyles: string[];
     textCases: TextCase[];
 };
 
 const defaultFrameWidth = 400;
+const defaultPad = 5;
 
 // This shows the HTML page in "ui.html"
-figma.showUI(__html__, { height: 420, width: 350, themeColors: true });
+figma.showUI(__html__, { height: 400, width: 350, themeColors: true });
 
 (async () => {
     const availableFonts = await figma.listAvailableFontsAsync();
@@ -92,7 +92,8 @@ async function createStyledText(msg: PluginMessage): Promise<void> {
     // Create a new frame to hold the styled text nodes
     const frame = figma.createFrame();
     // Calculate frame height from yOffset
-    const frameHeight = msg.yOffset * fonts.length * cases.length;
+    const yOffset = msg.fontSize + defaultPad;
+    const frameHeight = yOffset * fonts.length * cases.length;
     frame.resize(defaultFrameWidth, frameHeight);
     frame.name = msg.frameName;
 
@@ -113,7 +114,7 @@ async function createStyledText(msg: PluginMessage): Promise<void> {
             frame.appendChild(textNode);
 
             // Update the yOffsetCur for the next line of text
-            yOffsetCur += msg.yOffset;
+            yOffsetCur += yOffset;
         }
     }
 
