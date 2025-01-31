@@ -1,27 +1,28 @@
 // List of the most common font weight names ordered from lowest to highest weight
 const fontWeightOrder = [
-    'Hairline',
-    'Thin',
-    'Ultra Light',
-    'UltraLight',
-    'Extra Light',
-    'ExtraLight',
-    'Light',
-    'Normal',
-    'Regular',
+    'hairline',
+    'thin',
+    'ultra light',
+    'ultralight',
+    'extra light',
+    'extralight',
+    'light',
+    'normal',
+    'regular',
     '', // Include blank string to account for Regular Italic which is often just named Italic
-    'Medium',
-    'Semi Bold',
-    'SemiBold',
-    'Demi Bold',
-    'DemiBold',
-    'Bold',
-    'Extra Bold',
-    'ExtraBold',
-    'Ultra Bold',
-    'UltraBold',
-    'Black',
-    'Heavy',
+    'medium',
+    'semi bold',
+    'semibold',
+    'demi bold',
+    'demibold',
+    'bold',
+    'extra bold',
+    'extrabold',
+    'ultra bold',
+    'ultrabold',
+    'black',
+    'heavy',
+    'ultra',
 ];
 
 // Event message from the plugin UI
@@ -93,10 +94,10 @@ async function createFontList(msg: PluginMessage): Promise<FontName[]> {
         }
         // Sort by weight order
         const aWeightIdx = fontWeightOrder.indexOf(
-            a.fontName.style.replace(/italic/i, '').trim(),
+            a.fontName.style.toLowerCase().replace(/italic/i, '').trim(),
         );
         const bWeightIdx = fontWeightOrder.indexOf(
-            b.fontName.style.replace(/italic/i, '').trim(),
+            b.fontName.style.toLowerCase().replace(/italic/i, '').trim(),
         );
         return m * (aWeightIdx - bWeightIdx);
     });
