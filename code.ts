@@ -96,9 +96,15 @@ function findMatchingSubstring(
     substrings: string[],
     regularIdx: number,
 ): [string, number] {
-    for (let idx = 0; idx < substrings.length; idx++) {
-        if (str.includes(substrings[idx])) {
-            return [substrings[idx], idx];
+    // Sort substrings by length to ensure we match e.g. `extra bold` before `bold`
+    // while keeping track of original indexes to maintain the correct order
+    const sortedSubstrings = substrings
+        .map((substring, idx) => ({ substring, idx }))
+        .sort((a, b) => b.substring.length - a.substring.length);
+
+    for (const { substring, idx } of sortedSubstrings) {
+        if (str.includes(substring)) {
+            return [substring, idx];
         }
     }
     return ['regular', regularIdx];
