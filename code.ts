@@ -166,7 +166,9 @@ async function createFontList(msg: PluginMessage): Promise<FontName[]> {
             return m * ((a.isItalic ? 1 : 0) - (b.isItalic ? 1 : 0));
         }
         // Sort by width order
-
+        if (a.width !== b.width) {
+            return m * (a.widthIdx - b.widthIdx);
+        }
         // Sort by weight order
         return m * (a.weightIdx - b.weightIdx);
     });
