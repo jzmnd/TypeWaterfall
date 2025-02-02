@@ -1,39 +1,10 @@
-// List of the most common font weight names ordered from lowest to highest weight
-const fontWeightOrder = [
-    'hairline',
-    'thin',
-    'ultra light',
-    'ultralight',
-    'extra light',
-    'extralight',
-    'light',
-    'normal',
-    'regular',
-    'medium',
-    'semi bold',
-    'semibold',
-    'demi bold',
-    'demibold',
-    'bold',
-    'extra bold',
-    'extrabold',
-    'ultra bold',
-    'ultrabold',
-    'black',
-    'heavy',
-    'ultra',
-];
-const regularFontWeightIdx = 8;
-
-// List of common font widths ordered from widest to narrowest
-const fontWidthOrder = [
-    'wide',
-    'semiwide',
-    'narrow',
-    'condensed',
-    'compressed',
-];
-const regularFontWidthIdx = 1.5;
+import {
+    fontWeightOrder,
+    regularFontWeightIdx,
+    fontWidthOrder,
+    regularFontWidthIdx,
+    defaultPad,
+} from './constants';
 
 // Event message from the plugin UI
 type PluginMessage = {
@@ -58,9 +29,6 @@ type FontParsed = {
     widthIdx: number;
     isItalic: boolean;
 };
-
-// Default padding amount
-const defaultPad = 5;
 
 // This shows the HTML page in "ui.html"
 figma.showUI(__html__, { height: 400, width: 350, themeColors: true });
