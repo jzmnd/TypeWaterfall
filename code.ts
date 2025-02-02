@@ -91,11 +91,11 @@ async function loadFonts(fonts: FontName[]): Promise<void> {
  * @param List of substrings to match on
  * @returns Matched substring and its index in the substring list or `regular` if not found
  */
-function findMatchingSubstring(
+async function findMatchingSubstring(
     str: string,
     substrings: string[],
     regularIdx: number,
-): [string, number] {
+): Promise<[string, number]> {
     // Sort substrings by length to ensure we match e.g. `extra bold` before `bold`
     // while keeping track of original indexes to maintain the correct order
     const sortedSubstrings = substrings
@@ -117,12 +117,12 @@ function findMatchingSubstring(
  */
 async function parseFontName(font: Font): Promise<FontParsed> {
     const style = font.fontName.style.toLowerCase();
-    const [weight, weightIdx] = findMatchingSubstring(
+    const [weight, weightIdx] = await findMatchingSubstring(
         style,
         fontWeightOrder,
         regularFontWeightIdx,
     );
-    const [width, widthIdx] = findMatchingSubstring(
+    const [width, widthIdx] = await findMatchingSubstring(
         style,
         fontWidthOrder,
         regularFontWidthIdx,
