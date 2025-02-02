@@ -126,6 +126,8 @@ async function createStyledText(msg: PluginMessage): Promise<void> {
     frame.paddingRight = defaultPad;
     frame.paddingTop = defaultPad;
     frame.paddingBottom = defaultPad;
+    frame.x = figma.viewport.center.x;
+    frame.y = figma.viewport.center.y;
 
     let yOffset = 0;
 
