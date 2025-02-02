@@ -2,7 +2,7 @@
   "name": "TypeWaterfall",
   "version": "1.0.0",
   "description": "Plugin to create type specimen waterfalls",
-  "main": "code.js",
+  "main": "dist/code.js",
   "scripts": {
     "build": "webpack",
     "format": "prettier src/**/*.ts --write",
