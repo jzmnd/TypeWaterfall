@@ -1,5 +1,5 @@
 {
-  "name": "TypeWaterfall",
+  "name": "@jzmnd/type-waterfall",
   "version": "1.0.0",
   "description": "Plugin to create type specimen waterfalls",
   "main": "dist/code.js",
@@ -10,8 +10,8 @@
     "lint:fix": "eslint --ext .ts,.tsx --ignore-pattern node_modules --fix .",
     "watch": "npm run build -- --watch"
   },
-  "author": "",
-  "license": "",
+  "author": "Jez Smith",
+  "license": "MIT",
   "devDependencies": {
     "@figma/eslint-plugin-figma-plugins": "*",
     "@figma/plugin-typings": "^1.104.0",
